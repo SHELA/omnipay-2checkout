@@ -9,7 +9,7 @@ use Omnipay\TwoCheckoutPlus\Message\RefundRequest;
 use Omnipay\TwoCheckoutPlus\Message\DetailSaleRequest;
 use Omnipay\TwoCheckoutPlus\Message\StopRecurringRequest;
 use Omnipay\TwoCheckoutPlus\Message\CompletePurchaseRequest;
-use Omnipay\TwoCheckoutPlus\Message\NotificationRequest;
+use Omnipay\TwoCheckoutPlus\Message\IpnNotificationRequest;
 
 /**
  * 2Checkout Gateway.
@@ -26,8 +26,6 @@ class Gateway extends AbstractGateway
         return array(
             'accountNumber' => '',
             'secretWord' => '',
-            // if true, transaction with the live checkout URL will be a demo sale and card won't be charged.
-            'demoMode' => false,
             'testMode' => false,
         );
     }
@@ -158,6 +156,28 @@ class Gateway extends AbstractGateway
     }
 
     /**
+     * Setter: customerId.
+     *
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setCustomerId($value)
+    {
+        return $this->setParameter('customerId', $value);
+    }
+
+    /**
+     * Getter: customerId.
+     *
+     * @return string
+     */
+    public function getCustomerId()
+    {
+        return $this->getParameter('customerId');
+    }
+
+    /**
      * Setter: coupon.
      *
      * @param $value
@@ -211,6 +231,28 @@ class Gateway extends AbstractGateway
     public function setSecretWord($value)
     {
         return $this->setParameter('secretWord', $value);
+    }
+
+    /**
+     * Getter: 2Checkout secret key.
+     *
+     * @return string
+     */
+    public function getSecretKey()
+    {
+        return $this->getParameter('secretKey');
+    }
+
+    /**
+     * Setter: 2Checkout secret key.
+     *
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setSecretKey($value)
+    {
+        return $this->setParameter('secretKey', $value);
     }
 
     /**
@@ -367,6 +409,36 @@ class Gateway extends AbstractGateway
         return parent::setParameter('amount', $value);
     }
 
+    public function getDescription()
+    {
+        return $this->getParameter('description');
+    }
+
+    public function setDescription($value)
+    {
+        return parent::setParameter('description', $value);
+    }
+
+    public function getProductId()
+    {
+        return $this->getParameter('productId');
+    }
+
+    public function setProductId($value)
+    {
+        return parent::setParameter('productId', $value);
+    }
+
+    public function getQty()
+    {
+        return $this->getParameter('qty');
+    }
+
+    public function setQty($value)
+    {
+        return parent::setParameter('qty', $value);
+    }
+
     public function getCurrency()
     {
         return parent::getCurrency();
@@ -429,8 +501,8 @@ class Gateway extends AbstractGateway
      *
      * @return AbstractRequest
      */
-    public function acceptNotification(array $parameters = array())
+    public function ipnNotification(array $parameters = array())
     {
-        return $this->createRequest(NotificationRequest::class, $parameters);
+        return $this->createRequest(IpnNotificationRequest::class, $parameters);
     }
 }

@@ -19,7 +19,7 @@ processing library for PHP 5.3+. This package implements 2checkout support for O
 Via Composer
 
 ``` bash
-$ composer require collizo4sky/omnipay-2checkout
+$ composer require SHELA/omnipay-2checkout
 ```
 
 ## Usage
@@ -27,7 +27,6 @@ $ composer require collizo4sky/omnipay-2checkout
 The following gateways are provided by this package:
 
  * TwoCheckoutPlus
- * TwoCheckoutPlus_Token
  
 ### TwoCheckoutPlus
 ``` php
@@ -114,50 +113,6 @@ try {
     if ($response->isRedirect()) {
         $response->getRedirectUrl();
 
-    } else {
-        $error = $response->getMessage();
-    }
-} catch (Exception $e) {
-    $e->getMessage();
-}
-```
-
-### TwoCheckoutPlus_Token
-
-``` php
-use Omnipay\Omnipay;
-
-try {
-    $gateway = Omnipay::create('TwoCheckoutPlus_Token');
-    $gateway->setAccountNumber($this->account_number);
-    $gateway->setTestMode($this->is_sandbox_test());
-    $gateway->setPrivateKey($this->private_key);
-
-    $formData = array(
-        'firstName' => $order->get_billing_first_name(),
-        'lastName' => $order->get_billing_last_name(),
-        'email' => $order->get_billing_email(),
-        'billingAddress1' => $order->get_billing_address_1(),
-        'billingAddress2' => $order->get_billing_address_2(),
-        'billingCity' => $order->get_billing_city(),
-        'billingPostcode' => $order->get_billing_postcode(),
-        'billingState' => $order->get_billing_state(),
-        'billingCountry' => $order->get_billing_country(),
-    );
-
-
-    $purchase_request_data = array(
-        'card' => $formData,
-        'token' => sanitize_text_field($_POST['twocheckout_token']),
-        'transactionId' => $order->get_order_number(),
-        'currency' => 'USD',
-        'amount' => $order->order_total,
-    );
-
-    $response = $gateway->purchase($purchase_request_data)->send();
-
-    if ($response->isSuccessful()) {
-        $transaction_ref = $response->getTransactionReference();
     } else {
         $error = $response->getMessage();
     }

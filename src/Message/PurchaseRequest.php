@@ -13,78 +13,50 @@ class PurchaseRequest extends AbstractRequest
     {
         $this->validate('accountNumber', 'returnUrl');
 
-        $data = [];
-        $data['sid'] = $this->getAccountNumber();
-        $data['mode'] = '2CO';
-        $data['merchant_order_id'] = $this->getTransactionId();
-        $data['currency_code'] = $this->getCurrency();
-        $data['x_receipt_link_url'] = $this->getReturnUrl();
+        $setup_data             = [];
+        $setup_data['merchant'] = $this->getAccountNumber();
+        $setup_data['secret_word'] = $this->getSecretWord();
+        $setup_data['dynamic']  = 1;
+        $setup_data['language'] = 'en';
+        //2. Set the BASE needed fields.
+        $cart_data                     = [];
+        $cart_data['return-url']       = $this->getReturnUrl();
+        $cart_data['return-type']      = 'redirect';
+        $cart_data['expiration']       = time() + ( 3600 * 5 );
+        $cart_data['order-ext-ref']    = $this->getTransactionId();
+        $cart_data['customer-ext-ref'] = $this->getCustomerId();
+        $cart_data['item-ext-ref']     = $this->getProductId();
+        $cart_data['currency']         = $this->getCurrency();
+        $cart_data["test"]             = $this->getTestMode();
 
-        // Do not pass for live sales i.e if its false.
-        if ($this->getDemoMode()) {
-            $data['demo'] = 'Y';
-        }
+        //dynamic products
+        $product_data['prod']     = $this->getDescription();
+        $product_data['price']    = $this->getAmount();
+        $product_data['qty']      = $this->getQty();
+        $product_data['type']     = "digital";
 
         if ($this->getLanguage()) {
-            $data['lang'] = $this->getLanguage();
+            $cart_data['lang'] = $this->getLanguage();
         }
-
-        if ($this->getPurchaseStep()) {
-            $data['purchase_step'] = $this->getPurchaseStep();
-        }
-
-        if ($this->getCoupon()) {
-            $data['coupon'] = $this->getCoupon();
-        }
-
-        // needed to determine which API endpoint to use in OffsiteResponse
-        if ($this->getTestMode()) {
-            $data['sandbox'] = true;
-        }
-
-        $i = 0;
-
-        // Setup Products information
-        foreach ($this->getCart() as $item) {
-            $data['li_' . $i . '_type'] = $item['type'];
-            $data['li_' . $i . '_name'] = $item['name'];
-            $data['li_' . $i . '_price'] = $item['price'];
-            $data['li_' . $i . '_quantity'] = $item['quantity'];
-
-            // optional item/product parameters
-            if (isset($item['tangible'])) {
-                $data['li_' . $i . '_tangible'] = $item['tangible'];
-            }
-            if (isset($item['product_id'])) {
-                $data['li_' . $i . '_product_id'] = $item['product_id'];
-            }
-            if (isset($item['description'])) {
-                $data['li_' . $i . '_description'] = $item['description'];
-            }
-            if (isset($item['recurrence'])) {
-                $data['li_' . $i . '_recurrence'] = $item['recurrence'];
-            }
-            if (isset($item['duration'])) {
-                $data['li_' . $i . '_duration'] = $item['duration'];
-            }
-            if (isset($item['startup_fee'])) {
-                $data['li_' . $i . '_startup_fee'] = $item['startup_fee'];
-            }
-
-            ++$i;
-        }
-
+        $billing_data = [];
         if ($this->getCard()) {
-            $data['card_holder_name'] = $this->getCard()->getName();
-            $data['street_address'] = $this->getCard()->getAddress1();
-            $data['street_address2'] = $this->getCard()->getAddress2();
-            $data['city'] = $this->getCard()->getCity();
-            $data['state'] = $this->getCard()->getState();
-            $data['zip'] = $this->getCard()->getPostcode();
-            $data['country'] = $this->getCard()->getCountry();
-            $data['phone'] = $this->getCard()->getPhone();
-            $data['email'] = $this->getCard()->getEmail();
+            $billing_data['name'] = $this->getCard()->getName();
+            $billing_data['address'] = $this->getCard()->getAddress1();
+            $billing_data['address2'] = $this->getCard()->getAddress2();
+            $billing_data['city'] = $this->getCard()->getCity();
+            $billing_data['state'] = $this->getCard()->getState();
+            $billing_data['zip'] = $this->getCard()->getPostcode();
+            $billing_data['country'] = $this->getCard()->getCountry();
+            $billing_data['phone'] = $this->getCard()->getPhone();
+            $billing_data['email'] = $this->getCard()->getEmail();
         }
+
+        $data = [
+            'setup_data'    => $setup_data,
+            'cart_data'     => $cart_data,
+            'product_data'  => $product_data,
+            'billing_data'  => $billing_data,
+        ];
 
         $data = array_filter($data, function ($value) {
             return $value !== null;

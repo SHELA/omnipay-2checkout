@@ -79,6 +79,16 @@ abstract class AbstractRequest extends BaseAbstractRequest
         return $this->setParameter('secretWord', $value);
     }
 
+    public function getSecretKey()
+    {
+        return $this->getParameter('secretKey');
+    }
+
+    public function setSecretKey($value)
+    {
+        return $this->setParameter('secretKey', $value);
+    }
+
     public function getPrivateKey()
     {
         return $this->getParameter('privateKey');
@@ -243,6 +253,26 @@ abstract class AbstractRequest extends BaseAbstractRequest
         return $this->getParameter('lineItemId');
     }
 
+    public function setCustomerId($value)
+    {
+        return $this->setParameter('customerId', $value);
+    }
+
+    public function getQty()
+    {
+        return $this->getParameter('qty');
+    }
+
+    public function setQty($value)
+    {
+        return parent::setParameter('qty', $value);
+    }
+
+    public function getCustomerId()
+    {
+        return $this->getParameter('customerId');
+    }
+
     public function getAmount()
     {
         return parent::getAmount();
@@ -251,6 +281,16 @@ abstract class AbstractRequest extends BaseAbstractRequest
     public function setAmount($value)
     {
         return parent::setAmount($value);
+    }
+
+    public function getDescription()
+    {
+        return $this->getParameter('description');
+    }
+
+    public function setDescription($value)
+    {
+        return parent::setParameter('description', $value);
     }
 
     public function getCurrency()
@@ -262,4 +302,15 @@ abstract class AbstractRequest extends BaseAbstractRequest
     {
         return parent::setCurrency($value);
     }
+
+    public function getProductId()
+    {
+        return $this->getParameter('productId');
+    }
+
+    public function setProductId($value)
+    {
+        return parent::setParameter('productId', $value);
+    }
+
 }

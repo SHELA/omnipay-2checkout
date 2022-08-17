@@ -1,17 +1,15 @@
 {
-    "name": "collizo4sky/omnipay-2checkout",
+    "name": "SHELA/omnipay-2checkout",
     "description": "2Checkout driver for the Omnipay payment processing library",
     "keywords": [
         "omnipay",
         "2checkout"
     ],
-    "homepage": "https://github.com/collizo4sky/omnipay-2checkout",
+    "homepage": "https://github.com/SHELA/omnipay-2checkout",
     "license": "MIT",
     "authors": [
         {
-            "name": "Agbonghama Collins",
-            "email": "me@w3guy.com",
-            "homepage": "http://w3guy.com"
+            "name": "SHELA",
         }
     ],
     "require": {

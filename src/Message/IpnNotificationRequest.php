@@ -2,7 +2,7 @@
 
 namespace Omnipay\TwoCheckoutPlus\Message;
 
-class NotificationRequest extends AbstractRequest
+class IpnNotificationRequest extends AbstractRequest
 {
     /**
      * {@inheritdoc}
@@ -12,7 +12,7 @@ class NotificationRequest extends AbstractRequest
     public function getData()
     {
         $data = $this->httpRequest->request->all();
-        $data['secretWord'] = $this->getSecretWord();
+        $data['secretKey'] = $this->getSecretKey();
         $data['accountNumber'] = $this->getAccountNumber();
 
         return $data;
